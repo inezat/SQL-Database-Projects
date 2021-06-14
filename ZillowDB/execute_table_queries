@@ -1,0 +1,6 @@
+
+#select * from zhvi;
+
+select * from spi;
+
+#select * from zori;

@@ -1,0 +1,52 @@
+#Create Table Zillow home
+drop table if exists zhvi; 
+create table if not exists zhvi
+(
+region_id integer NOT NULL, 
+region_name varchar(10000), 
+region_type varchar(10000),
+state_name varchar(10000),
+oct_2020 integer NOT NULL,
+nov_2020 integer NOT NULL,
+dec_2020 integer NOT NULL,
+jan_2021 integer NOT NULL,
+CONSTRAINT zhvi_pk PRIMARY KEY (region_id)
+);
+
+#Load Data
+load data local infile 'zillow_data2.csv' into table zhvi fields terminated by ',' IGNORE 1 LINES;
+
+#Create Table sale
+drop table if exists spi; 
+create table if not exists spi
+(
+region_id integer NOT NULL, 
+region_name varchar(10000), 
+region_type varchar(10000),
+state_name varchar(10000),
+oct_2020 integer NOT NULL,
+nov_2020 integer NOT NULL,
+dec_2020 integer NOT NULL,
+jan_2021 integer NOT NULL,
+CONSTRAINT spi_pk PRIMARY KEY (region_id)
+);
+
+#Load Data
+load data local infile 'zillow_saleprice2.csv' into table spi fields terminated by ',' IGNORE 1 LINES;
+
+#Create Table rent
+drop table if exists zori; 
+create table if not exists zori(
+region_id integer NOT NULL, 
+region_name varchar(10000),
+state_name varchar(10000), 
+oct_2020 integer NOT NULL,
+nov_2020 integer NOT NULL,
+dec_2020 integer NOT NULL,
+jan_2021 integer NOT NULL,
+CONSTRAINT zori_pk PRIMARY KEY (region_id)
+);
+
+#Load Data
+load data local infile 'zillow_rent2.csv' into table zori fields terminated by ',' IGNORE 1 LINES;
+

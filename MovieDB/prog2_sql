@@ -1,0 +1,35 @@
+insert into movies values(12345, "strangemovie", 0);
+select * from movies;
+
+update movies set name = "badmovie" where movie_id = 12345;
+select * from movies;
+
+delete from movies where movie_id = 12345;
+select * from movies;
+
+select movie_id, name from movies where name like "%Warrior%";
+
+select cast_id, cast_name from cast group by cast_id having count(movie_id) = 4 order by cast_name;
+
+SELECT movie_id, score FROM movies WHERE score > 80 AND movie_id IN (SELECT movie_id FROM cast WHERE cast_name NOT LIKE 'David');
+
+SELECT c.cast_id, c.cast_name, count(c.movie_id) as num_movies, avg(m.score) as average_score 
+From cast c join movies m on m.movie_id = c.movie_id where m.score > 0 group by c.cast_id order by c.cast_name;
+
+SELECT name from movies where score > (SELECT score from movies where name like '%Chronicles%');
+
+create view GoodCollaboration as SELECT c1.cast_id as cast_id1, c2.cast_id as cast_id2, avg(m.score) as avg_movie_score, count(m.movie_id) as count_movies 
+from cast c1 join cast c2 on c2.movie_id = c1.movie_id join movies m on m.movie_id = c2.movie_id having count_movies >= 4 and avg_movie_score >= 75;
+
+
+SELECT c1.cast_id as cast_id1, c2.cast_id as cast_id2, avg(m.score) as avg_movie_score, count(m.movie_id) as count_movies
+
+from cast c1 join cast c2 join movies m
+
+where c1.movie_id = c2.movie_id and c2.movie_id=m.movie_id and c1.cast_id <> c2.cast_id and m.score >= 75
+
+group by cast_id1, cast_id2
+
+having count_movies>=4
+
+order by avg_movie_score;

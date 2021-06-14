@@ -1,0 +1,145 @@
+Q1.Counts the number of regions that the home value index has increased since October 2020 and lists the number along with the region id. This will present an idea of the real-estate situation at that time. 
+
+SELECT COUNT(region_id) AS num_regions 
+
+FROM zhvi 
+
+WHERE jan_2021 > oct_2020 
+
+ORDER BY num_regions DESC, region_id DESC; 
+
+ 
+
+ 
+
+Q2.Selects the home value index of listings in November 2020 and the observed rent index in November 2020 to compare home value vs rent cost. 
+
+SELECT nov_2020 FROM zhvi 
+
+UNION 
+
+SELECT nov_2020 FROM zori 
+
+ 
+
+Q3. Counts the number of regions per state that the home value index has increased since October 2020. This will present an idea of the real-estate situation at that time. 
+
+SELECT distinct state_name, count(region_id) as numRegions 
+
+FROM zhvi  
+
+WHERE jan_2021 > oct_2020 AND nov_2020 < dec_2020 
+
+GROUP BY state_name; 
+
+ 
+
+Q4. 
+
+Displays the average home value index for each listed month only for the state of Louisiana to gauge the changes over certain months of the year. 
+
+Select AVG(oct_2020) AS OCT20, AVG(nov_2020) AS NOV20, AVG(dec_2020) AS DEC20, AVG(jan_2021) AS JAN21 
+
+from zhvi 
+
+where state_name LIKE 'L%A'; 
+
+ 
+
+ 
+
+ 
+
+Q5. 
+
+Displays the region ID, city name, and the observed rent index of each region in Colorado where the rent index is greater than 2000 during January 2021.  
+
+Select region_id, region_name, jan_2021 
+
+from zori 
+
+where jan_2021 > 2000 and state_name LIKE '%CO%' 
+
+GROUP BY region_name; 
+
+ 
+
+ 
+
+Q6. 
+
+This displays values in the table with fields not yet filled out. This allows us to make corrections and avoid discrepancies  
+
+Select * 
+
+from spi 
+
+where state_name IS NULL or region_name IS NULL; 
+
+
+  
+
+-- Finds the most recent observations on California properties with home index value under $1000000 and rent index under $2000 
+
+  
+
+SELECT O.region_id, O.region_name, O.jan_2021 
+
+FROM zhvi Z, zori O 
+
+WHERE Z.state_name like '%CA%' AND O.state_name like '%CA%' AND Z.jan_2021<1000000 AND O.jan_2021<2000 
+
+GROUP BY jan_2021 
+
+ORDER BY jan_2021 DESC; 
+
+  
+
+--Finds the most recent data for rent and buy options for New York but not in buffalo. 
+
+  
+
+SELECT O.region_id, O.region_name, O.state_name, O.jan_2021 as RentIndex, S.jan_2021 as MedianSale 
+
+FROM zori O, spi S 
+
+WHERE O.state_name like '%NY%' AND S.state_name like '%NY%'  AND O.region_name not like '%Buffalo%' AND S.region_name not like '%Buffalo%' 
+
+Group BY O.region_name; 
+
+ 
+
+  
+
+-- Finds the average home value index and change in median sale price index in Texas for the value appreciation and sales in this state. Here we group by the price index change between January 2021 and October 2020 and order it by descending to find the max difference. 
+
+  
+
+SELECT Z.jan_2021, Z.region_name, (S.jan_2021-S.oct_2020) as priceIndexChange 
+
+FROM zhvi Z 
+
+LEFT OUTER JOIN spi S ON Z.region_name= S.region_name 
+
+WHERE Z.state_name like '%TX%' AND S.state_name like '%TX%' 
+
+GROUP BY priceIndexChange 
+
+ORDER BY priceIndexChange DESC; 
+
+
+Q10. Display ZORI and SPI values for October 2020 along with region name to compare the Observed Rent Rndex and median Sale Price Index for each region during that month. 
+
+SELECT Z.oct_2020 as oct2020Rent, S.oct_2020 as oct2020Sale, Z.region_name 
+
+FROM zori Z  
+
+LEFT OUTER JOIN spi S ON S.region_name=Z.region_name 
+
+WHERE S.oct_2020 IS NOT NULL; 
+
+ 
+
+
+
+

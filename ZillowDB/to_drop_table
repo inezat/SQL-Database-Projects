@@ -1,0 +1,4 @@
+#Create Tables
+drop table zhvi; 
+drop table spi;
+drop table zori;
